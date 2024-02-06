@@ -107,3 +107,71 @@ extension SignatureServiceTests {
             }
     }
 }
+
+// MARK: makeKey
+extension SignatureServiceTests {
+    func testMakeKey1() throws {
+        // Given
+        let data = "Hello, world!"
+        let timestamp = "123465789"
+        let nonce = "4545"
+        
+        // When
+        let result = SignatureService.makeKey(data: data, timestamp: timestamp, nonce: nonce)
+        // Then
+        XCTAssertEqual(result, "1234657894545Hello, world!")
+    }
+}
+
+
+// MARK: makeSignatureHeaders
+extension SignatureServiceTests {
+    func testMakeSignatureHeaders() throws {
+        // Given
+        let data = "Hello, world!"
+        
+        // When
+        guard let headers = SignatureService.makeSignatureHeaders(data: data) else { XCTFail("No Headers"); return }
+        guard let timestamp = headers["Timestamp"] else { XCTFail("No Timestamp"); return }
+        guard let nonce = headers["Nonce"] else { XCTFail("No Nonce"); return }
+        guard let signature = headers["Signature"] else { XCTFail("No Signature"); return }
+        
+        let key = SignatureService.makeKey(data: data, timestamp: timestamp, nonce: nonce)
+        
+        let result = try SignatureService.verifySignature(signature: signature, data: data, key: key)
+        
+        // Then
+        XCTAssertTrue(result, "Signature verification failed when it should have succeeded")
+    }
+    
+    func testMakeSignatureHeadersFail() throws {
+        // Given
+        let data = "Hello, world!"
+        
+        // When
+        guard let headers = SignatureService.makeSignatureHeaders(data: data) else { XCTFail("No Headers"); return }
+        guard let timestamp = headers["Timestamp"] else { XCTFail("No Timestamp"); return }
+        guard let nonce = headers["Nonce"] else { XCTFail("No Nonce"); return }
+        guard let signature = headers["Signature"] else { XCTFail("No Signature"); return }
+        
+        let key = SignatureService.makeKey(data: data, timestamp: timestamp, nonce: nonce)
+        
+        let result = try SignatureService.verifySignature(signature: signature, data: "Hello, world", key: key)
+        
+        // Then
+        XCTAssertFalse(result, "Signature  shouldn't be verified")
+    }
+    
+    func testMakeSignatureHeadersDifferent() throws {
+        // Given
+        let data = "Hello, world!"
+        
+        // When
+        
+        guard let nonce1 = SignatureService.makeSignatureHeaders(data: data)?["Nonce"] else { XCTFail("No Nonce"); return }
+        guard let nonce2 = SignatureService.makeSignatureHeaders(data: data)?["Nonce"] else { XCTFail("No Nonce"); return }
+        
+        // Then
+        XCTAssertNotEqual(nonce1, nonce2, "Signature verification failed when it should have succeeded")
+    }
+}

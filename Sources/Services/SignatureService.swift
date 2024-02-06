@@ -14,7 +14,6 @@ enum SignatureError: Error {
 }
 
 public final class SignatureService {
-    
     public init() {}
     
     public static func generateSignature(data: String, key: String) -> String? {
@@ -29,7 +28,7 @@ public final class SignatureService {
     }
     
     public static func verifySignature(signature: String, data: String, key: String) throws -> Bool {
-        guard 
+        guard
             !key.isEmpty,
             let secretKey = key.data(using: .utf8),
             let data = data.data(using: .utf8) else {
@@ -41,6 +40,29 @@ public final class SignatureService {
         
         return signature == expectedSignature
     }
+    
+    public static func makeKey(data: String, timestamp: String, nonce: String) -> String {
+        "\(timestamp)\(nonce)\(data)"
+    }
+    
+    public static func makeSignatureHeaders(data: String) -> [String: String]? {
+        let timestamp = String(Date().timeIntervalSince1970)
+        let nonce = Self.generateNonce(length: 16)
+        let key = Self.makeKey(data: data, timestamp: timestamp, nonce: nonce)
+        guard let signature = Self.generateSignature(data: data, key: key) else { return nil }
+        
+        return [
+            "Timestamp": timestamp,
+            "Nonce": nonce,
+            "Signature": signature
+        ]
+    }
+    
+    private static func generateNonce(length: Int) -> String {
+        let characters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map { _ in characters.randomElement()! })
+    }
+    
 }
 
 extension Data {
