@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Moderation: Codable {
+public struct ModerationRequest: Codable {
     public let input: String
 
     public init(input: String) {

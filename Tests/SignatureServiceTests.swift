@@ -121,6 +121,18 @@ extension SignatureServiceTests {
         // Then
         XCTAssertEqual(result, "1234657894545Hello, world!")
     }
+    
+    func testMakeKeyLength() throws {
+        // Given
+        let data = "0123465789012346578901234657890123465789"
+        let timestamp = "123465789"
+        let nonce = "4545"
+        
+        // When
+        let result = SignatureService.makeKey(data: data, timestamp: timestamp, nonce: nonce)
+        // Then
+        XCTAssertEqual(result, "1234657894545012346578901234657890123465789")
+    }
 }
 
 

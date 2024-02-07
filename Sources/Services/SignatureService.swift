@@ -13,7 +13,14 @@ enum SignatureError: Error {
     case noData
 }
 
+
 public final class SignatureService {
+    public enum Constants {
+        public static let timestamp = "Timestamp"
+        public static let nonce = "Nonce"
+        public static let signature = "Signature"
+    }
+    
     public init() {}
     
     public static func generateSignature(data: String, key: String) -> String? {
@@ -42,7 +49,8 @@ public final class SignatureService {
     }
     
     public static func makeKey(data: String, timestamp: String, nonce: String) -> String {
-        "\(timestamp)\(nonce)\(data)"
+        let constrainedData = String(data.prefix(30))
+        return "\(timestamp)\(nonce)\(constrainedData)"
     }
     
     public static func makeSignatureHeaders(data: String) -> [String: String]? {
@@ -52,9 +60,9 @@ public final class SignatureService {
         guard let signature = Self.generateSignature(data: data, key: key) else { return nil }
         
         return [
-            "Timestamp": timestamp,
-            "Nonce": nonce,
-            "Signature": signature
+            Constants.timestamp: timestamp,
+            Constants.nonce: nonce,
+            Constants.signature: signature
         ]
     }
     
