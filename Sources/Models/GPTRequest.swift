@@ -19,7 +19,7 @@ public enum GPTModel: String {
     case gpt35 = "gpt-3.5-turbo"
 }
 
-public struct GPTRequest: Codable {
+public struct GPTRequest: Codable {    
     public let model: String
     public let messages: [ChatGPTResult.Message]
 
