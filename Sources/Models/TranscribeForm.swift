@@ -8,11 +8,12 @@
 import Foundation
 
 public struct TranscribeForm: Codable {
-    public var language: String
+    // ISO 639
+    public var languages: [String]
     public var dataBase64: String
 
-    public init(language: String, dataBase64: String) {
-        self.language = language
+    public init(languages: [String], dataBase64: String) {
+        self.languages = languages
         self.dataBase64 = dataBase64
     }
 }

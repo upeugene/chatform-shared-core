@@ -68,3 +68,18 @@ public struct ChatGPTResult: Decodable {
     }
 
 }
+
+// MARK: - Chat Completions Request (using SharedCore message model)
+public struct ChatCompletionRequestBody: Encodable {
+    public init(model: String, messages: [ChatGPTResult.Message], temperature: Double, max_tokens: Int? = nil) {
+        self.model = model
+        self.messages = messages
+        self.temperature = temperature
+        self.max_tokens = max_tokens
+    }
+    
+    public let model: String
+    public let messages: [ChatGPTResult.Message]
+    public let temperature: Double
+    public let max_tokens: Int?
+}
