@@ -16,9 +16,42 @@ public struct CreateCheckoutSessionResponse: Codable, Sendable  {
     }
 }
 
-public enum BillingPlan: String {
+public enum BillingPlan: String, Codable, Sendable, CaseIterable {
     case monthly
     case yearly
+}
+
+public enum SubscriptionState: String, Codable, Sendable, CaseIterable {
+    case active
+    case trialing
+}
+
+public struct SubscriptionStatus: Codable, Sendable, Equatable {
+    public let plan: BillingPlan?
+    public let state: SubscriptionState?
+    public var isActive: Bool {
+        state == .active
+    }
+
+    public init(
+        plan: BillingPlan?,
+        state: SubscriptionState?
+    ) {
+        self.plan = plan
+        self.state = state
+    }
+}
+
+public struct UserProfile: Codable, Sendable, Equatable {
+    public let uid: String
+    public let email: String?
+    public let subscriptionStatus: SubscriptionStatus
+
+    public init(uid: String, email: String?, subscription: SubscriptionStatus) {
+        self.uid = uid
+        self.email = email
+        self.subscriptionStatus = subscription
+    }
 }
 
 public struct BillingPriceConfiguration: Sendable {
