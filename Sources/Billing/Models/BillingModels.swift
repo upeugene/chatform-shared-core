@@ -16,6 +16,14 @@ public struct CreateCheckoutSessionResponse: Codable, Sendable  {
     }
 }
 
+public struct CreatePortalSessionResponse: Codable, Sendable {
+    public let portalUrl: String
+
+    public init(portalUrl: String) {
+        self.portalUrl = portalUrl
+    }
+}
+
 public enum BillingPlan: String, Codable, Sendable, CaseIterable {
     case monthly
     case yearly
