@@ -15,6 +15,7 @@ public struct RecordingContext: Codable, Sendable {
     public var selectedText: String?
     public var inputFieldText: String?
     public var customStyle: String?
+    public var commandTargetText: String?
 
     public init(
         appBundleId: String? = nil,
@@ -23,7 +24,8 @@ public struct RecordingContext: Codable, Sendable {
         visibleText: [String]? = nil,
         selectedText: String? = nil,
         inputFieldText: String? = nil,
-        customStyle: String? = nil
+        customStyle: String? = nil,
+        commandTargetText: String? = nil
     ) {
         self.appBundleId = appBundleId
         self.appName = appName
@@ -32,5 +34,6 @@ public struct RecordingContext: Codable, Sendable {
         self.selectedText = selectedText
         self.inputFieldText = inputFieldText
         self.customStyle = customStyle
+        self.commandTargetText = commandTargetText
     }
 }
